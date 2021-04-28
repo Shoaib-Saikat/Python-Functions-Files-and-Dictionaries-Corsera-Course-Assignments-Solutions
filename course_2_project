@@ -1,0 +1,229 @@
+'''We have provided some synthetic (fake, semi-randomly generated) twitter data in a csv file named project_twitter_data.csv which
+has the text of a tweet, the number of retweets of that tweet, and the number of replies to that tweet. 
+We have also words that express positive sentiment and negative sentiment, in the files positive_words.txt and negative_words.txt.
+
+Your task is to build a sentiment classifier, which will detect how positive or negative each tweet is.
+You will create a csv file, which contains columns for the Number of Retweets, Number of Replies, Positive Score 
+(which is how many happy words are in the tweet), Negative Score (which is how many angry words are in the tweet), and the Net Score for each tweet. 
+At the end, you upload the csv file to Excel or Google Sheets, and produce a graph of the Net Score vs Number of Retweets.
+
+To start, define a function called strip_punctuation which takes one parameter, a string which represents a word, and 
+removes characters considered punctuation from everywhere in the word. (Hint: remember the .replace() method for strings.)'''
+
+punctuation_chars = ["'", '"', ",", ".", "!", ":", ";", '#', '@']
+
+def strip_punctuation(string):
+
+    f_str = ''
+    
+    for char in string:
+        if not char in punctuation_chars:
+            f_str += char
+            
+    return f_str
+
+with open('positive_words.txt','r') as fh_pos:
+
+    pos_wrd_lst = []
+    
+    for ln in fh_pos:
+    
+        if not ln.startswith(';') and not ln.startswith('\n'):
+            pos_wrd_lst.append(ln.strip())
+
+with open('negative_words.txt','r') as fh_neg:
+
+    neg_wrd_lst = []
+    
+    for lin in fh_neg:
+    
+        if not lin.startswith(';') and not lin.startswith('\n'):
+            neg_wrd_lst.append(lin.strip())
+
+
+with open('project_twitter_data.csv','r') as fh:
+    with open('final.csv','w') as wf:
+    
+        header = True
+        for line in fh:
+
+            t_sliced_lst = line.strip().split(',')
+
+            t_txt = strip_punctuation(t_sliced_lst[0])
+            t_rt_num = t_sliced_lst[1]
+            t_rp_num = t_sliced_lst[2]
+
+            p_score = 0
+            n_score = 0    
+
+            t_txt_wrd_lst = t_txt.split()
+            
+            for samp_wrd in t_txt_wrd_lst:
+            
+                if samp_wrd in pos_wrd_lst:
+                    p_score += 1
+                    
+                elif samp_wrd in neg_wrd_lst:
+                    n_score += 1
+                    
+            net_score = p_score - n_score
+            
+            if header is True:
+                wf.write('{}, {}, positive_score, negative_score, net_score\n'.format(t_rt_num,t_rp_num))
+                header = False
+                
+            else:
+                wf.write('{}, {}, {}, {}, {}\n'.format(t_rt_num,t_rp_num,p_score,n_score,net_score))
+
+
+
+
+'''Next, copy in your strip_punctuation function and define a function called get_pos which takes one parameter, 
+a string which represents one or more sentences, and calculates how many words in the string are considered positive words. 
+Use the list, positive_words to determine what words will count as positive. The function should return a positive integer - 
+how many occurrences there are of positive words in the text. 
+Note that all of the words in positive_words are lower cased, 
+so you’ll need to convert all the words in the input string to lower case as well.'''
+
+
+punctuation_chars = ["'", '"', ",", ".", "!", ":", ";", '#', '@']
+# list of positive words to use
+positive_words = []
+with open("positive_words.txt") as pos_f:
+    for lin in pos_f:
+        if lin[0] != ';' and lin[0] != '\n':
+            positive_words.append(lin.strip())
+            
+def strip_punctuation(string):
+    f_str = ''
+    for char in string:
+        if not char in punctuation_chars:
+            f_str += char
+    return f_str
+            
+def get_pos(raw_str):
+    ps = strip_punctuation(raw_str)
+    lst = ps.lower().split()
+
+    res = 0
+
+    for wrd in lst:
+        if wrd in positive_words:
+            res += 1
+            
+    return res
+    
+    
+    
+    
+'''Next, copy in your strip_punctuation function and define a function called get_neg which takes one parameter, 
+a string which represents one or more sentences, and calculates how many words in the string are considered negative words. 
+Use the list, negative_words to determine what words will count as negative. The function should return a positive integer - 
+how many occurrences there are of negative words in the text. 
+Note that all of the words in negative_words are lower cased, so you’ll need to convert all the words in the input string to lower case as well.'''
+
+punctuation_chars = ["'", '"', ",", ".", "!", ":", ";", '#', '@']
+
+negative_words = []
+with open("negative_words.txt") as pos_f:
+    for lin in pos_f:
+        if lin[0] != ';' and lin[0] != '\n':
+            negative_words.append(lin.strip())
+            
+def strip_punctuation(string):
+    f_str = ''
+    for char in string:
+        if not char in punctuation_chars:
+            f_str += char
+    return f_str
+            
+def get_neg(raw_str):
+    ns = strip_punctuation(raw_str)
+    lst = ns.lower().split()
+
+    res = 0
+
+    for wrd in lst:
+        if wrd in negative_words:
+            res += 1
+            
+    return res
+    
+    
+    
+    
+'''Finally, copy in your previous functions and write code that opens the file project_twitter_data.csv which has the fake generated twitter data
+(the text of a tweet, the number of retweets of that tweet, and the number of replies to that tweet). 
+Your task is to build a sentiment classifier, which will detect how positive or negative each tweet is. 
+Copy the code from the code windows above, and put that in the top of this code window.
+Now, you will write code to create a csv file called resulting_data.csv, which contains the Number of Retweets, Number of Replies, 
+Positive Score (which is how many happy words are in the tweet), Negative Score (which is how many angry words are in the tweet), 
+and the Net Score (how positive or negative the text is overall) for each tweet. The file should have those headers in that order. 
+Remember that there is another component to this project. You will upload the csv file to Excel or Google Sheets and produce a graph
+of the Net Score vs Number of Retweets. 
+Check Coursera for that portion of the assignment, if you’re accessing this textbook from Coursera.'''
+
+punctuation_chars = ["'", '"', ",", ".", "!", ":", ";", '#', '@']
+
+def strip_punctuation(string):
+
+    f_str = ''
+    
+    for char in string:
+        if not char in punctuation_chars:
+            f_str += char
+            
+    return f_str
+
+with open('positive_words.txt','r') as fh_pos:
+
+    pos_wrd_lst = []
+    
+    for ln in fh_pos:
+    
+        if not ln.startswith(';') and not ln.startswith('\n'):
+            pos_wrd_lst.append(ln.strip())
+
+with open('negative_words.txt','r') as fh_neg:
+
+    neg_wrd_lst = []
+    
+    for lin in fh_neg:
+    
+        if not lin.startswith(';') and not lin.startswith('\n'):
+            neg_wrd_lst.append(lin.strip())
+
+
+with open('project_twitter_data.csv','r') as fh:
+    with open('resulting_data.csv','w') as wf:
+
+        wf.write('Number of Retweets, Number of Replies, Positive Score, Negative Score, Net Score\n')
+
+        header = True
+        for line in fh:
+            if header is True:
+                header = False
+                continue
+            
+            else:
+                t_sliced_lst = line.strip().split(',')
+
+                t_txt = strip_punctuation(t_sliced_lst[0])
+                t_rt_num = t_sliced_lst[1]
+                t_rp_num = t_sliced_lst[2]
+
+                p_score = 0
+                n_score = 0  
+
+                t_txt_wrd_lst = t_txt.split()
+
+                for samp_wrd in t_txt_wrd_lst:
+
+                    if samp_wrd in pos_wrd_lst:
+                        p_score += 1
+
+                    elif samp_wrd in neg_wrd_lst:
+                        n_score += 1
+
+                net_score = p_score - n_score
+                wf.write('{}, {}, {}, {}, {}\n'.format(t_rt_num,t_rp_num,p_score,n_score,net_score))
